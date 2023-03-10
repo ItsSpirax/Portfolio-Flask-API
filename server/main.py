@@ -104,7 +104,7 @@ def stacker():
             model = f"\n**Model:** {json_response['parse']['simple_operating_platform_string']}"
             if json_response["parse"]["simple_operating_platform_string"] == None:
                 model = ""
-            ip = str(request.json["ip"])
+            ip = str(request.headers.get("Cf-Connecting-Ip"))
             if ip in ip_list:
                 response = ip_list[ip]
             else:

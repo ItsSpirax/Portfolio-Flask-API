@@ -1,6 +1,7 @@
 # Import
 import json
 import os
+
 import requests
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from flask import Flask, request, redirect, abort, jsonify, send_file
@@ -26,6 +27,7 @@ def captcha_verify(response, remoteip):
             },
         ).content
     )["success"]
+
 
 def send_discord_webhook(
         webhook_url,
@@ -65,7 +67,7 @@ def ping():
 def stacker():
     username = request.json["username"]
     score = request.json["score"]
-    if username != None and score != None:
+    if username is not None and score is not None:
         if score == 0 or score > 50:
             return jsonify(message="200: Success")
         adblock = str(request.json["adblock"])
@@ -78,7 +80,7 @@ def stacker():
             rotation = "Landscape"
         try:
             battery = f"\n\n**Battery:** {request.json['battery']}\n**Charging:** {str(request.json['charging'])}"
-        except:
+        except server_error:
             battery = ""
         user_agent = str(request.headers.get("User-Agent"))
         if user_agent in user_list:
@@ -93,7 +95,7 @@ def stacker():
         json_response = json.loads(response.content)
         platform = json_response["parse"]["simple_software_string"]
         model = f"\n**Model:** {json_response['parse']['simple_operating_platform_string']}"
-        if json_response["parse"]["simple_operating_platform_string"] == None:
+        if json_response["parse"]["simple_operating_platform_string"] is None:
             model = ""
         ip = str(request.headers.get("Cf-Connecting-Ip"))
         if ip in ip_list:
@@ -117,7 +119,8 @@ def stacker():
             vpn = " (VPN)"
         embed = DiscordEmbed(
             title=f"{username}   (Score: {score})",
-            description=f"**Platform:** {platform}{model}\n\n**Display:** {width} x {height} ({color} bit)\n**Orientation:** {rotation}{battery}\n",
+            description=f"**Platform:** {platform}{model}\n\n**Display:** {width} x {height} ({color} bit)\n"
+                        f"**Orientation:** {rotation}{battery}\n",
             color="39d874",
         )
         embed.set_thumbnail(
@@ -163,35 +166,35 @@ def submitform():
 
 # Error Handlers
 @app.errorhandler(400)
-def bad_request(e):
+def bad_request():
     return jsonify(error="400: Bad Request"), 400
 
 
 @app.errorhandler(401)
-def unauthorized(e):
+def unauthorized():
     return jsonify(error="401: Unauthorized"), 401
 
 
 @app.errorhandler(403)
-def forbidden(e):
+def forbidden():
     return jsonify(error="403: Forbidden"), 403
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     return jsonify(error="404: Not Found"), 404
 
 
 @app.errorhandler(405)
-def method_not_allowed(e):
+def method_not_allowed():
     return jsonify(error="405: Method Not Allowed"), 405
 
 
 @app.errorhandler(500)
-def server_error(e):
+def server_error():
     return jsonify(error="500: Server Error"), 500
 
 
 @app.errorhandler(505)
-def not_supported(e):
+def not_supported():
     return jsonify(error="505: HTTP Not Supported"), 505

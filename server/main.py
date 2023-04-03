@@ -80,7 +80,7 @@ def stacker():
             rotation = "Landscape"
         try:
             battery = f"\n\n**Battery:** {request.json['battery']}\n**Charging:** {str(request.json['charging'])}"
-        except server_error:
+        except:
             battery = ""
         user_agent = str(request.headers.get("User-Agent"))
         if user_agent in user_list:

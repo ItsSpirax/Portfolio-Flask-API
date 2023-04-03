@@ -76,7 +76,7 @@ def stacker():
         color = request.json["color"]
         rotation = request.json["rotation"]
         rotation = "Portrait"
-        if rotation == "landscape-primary" or rotation == "landscape-secondary":
+        if rotation in ["landscape-primary", "landscape-secondary", "landscape"] :
             rotation = "Landscape"
         try:
             battery = f"\n\n**Battery:** {request.json['battery']}\n**Charging:** {str(request.json['charging'])}"

@@ -1,9 +1,13 @@
 # Import
 import json
+import asyncio
 import os
-
 import requests
+from discord import Webhook, Embed
 from discord_webhook import DiscordWebhook, DiscordEmbed
+import aiohttp
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask import Flask, request, redirect, abort, jsonify, send_file
 from flask_cors import CORS
 
@@ -46,6 +50,45 @@ def send_discord_webhook(
     webhook.add_embed(embed)
     webhook.execute()
 
+async def update_leaderboard(score: int, username: str, message_id: int):
+    async with aiohttp.ClientSession() as session:
+        webhook = Webhook.from_url(os.environ["LEADERBOARD_WEBHOOK_URL"], session=session)
+        try:
+            webhook_msg = await webhook.fetch_message(message_id)
+            users = [x.split(". ")[1] for x in webhook_msg.embeds[0].fields[0].value.split("\n")]
+            scores = [int(x) for x in webhook_msg.embeds[0].fields[1].value.split("\n")]
+            # Remove all the
+            if username in users:
+                index = users.index(username)
+                if int(scores[index]) < score:
+                    scores[index] = score
+            else:
+                users.append(username)
+                scores.append(score)
+            users = [x for _, x in sorted(zip(scores, users), reverse=True)]
+            scores = sorted(scores, reverse=True)
+            users = [f"{i+1}. {x}" for i, x in enumerate(users)]
+            if len(users) > 10:
+                users.pop()
+                scores.pop()
+            newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.ml/stacker)", color=0x3498DB)
+            newEmbed.set_thumbnail(url="https://adith.ml/images/stack.png")
+            newEmbed.add_field(name="**Username**", value="\n".join(users), inline=True)
+            newEmbed.add_field(name="**Score**", value="\n".join([str(x) for x in scores]), inline=True)
+            newEmbed.set_footer(text="Last Updated")
+            newEmbed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
+            await webhook.edit_message(message_id, embed=newEmbed)
+        except Exception as e:
+            if str(e) == "404 Not Found (error code: 10008): Unknown Message":
+                newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.ml/stacker)", color=0x3498DB)
+                newEmbed.set_thumbnail(url="https://adith.ml/images/stack.png")
+                newEmbed.add_field(name="**Username**", value=f"1. {username}", inline=True)
+                newEmbed.add_field(name="**Score**", value=score, inline=True)
+                newEmbed.set_footer(text="Last Updated")
+                newEmbed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
+                await webhook.send(embed=newEmbed)
+            else:
+                print(e)
 
 # Web Request Routes
 @app.route("/", methods=["GET"])
@@ -70,6 +113,7 @@ def stacker():
     if username is not None and score is not None:
         if score == 0 or score > 50:
             return jsonify(message="200: Success")
+        asyncio.run(update_leaderboard(score, username, 1093228082359447592))
         adblock = str(request.json["adblock"])
         width = request.json["width"]
         height = request.json["height"]

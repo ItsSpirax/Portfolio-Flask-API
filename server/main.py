@@ -57,7 +57,6 @@ async def update_leaderboard(score: int, username: str, message_id: int):
             webhook_msg = await webhook.fetch_message(message_id)
             users = [x.split(". ")[1] for x in webhook_msg.embeds[0].fields[0].value.split("\n")]
             scores = [int(x) for x in webhook_msg.embeds[0].fields[1].value.split("\n")]
-            # Remove all the
             if username in users:
                 index = users.index(username)
                 if int(scores[index]) < score:

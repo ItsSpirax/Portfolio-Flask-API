@@ -77,7 +77,7 @@ async def update_leaderboard(score: int, username: str, message_id: int):
             newEmbed.add_field(name="**Score**", value="\n".join([str(x) for x in scores]), inline=True)
             newEmbed.set_footer(text="Last Updated")
             newEmbed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
-            await webhook.edit_message(message_id, embed=newEmbed)
+            await webhook.edit_message(message_id, embed=newEmbed, username="Stacker", avatar_url="https://adith.ml/favicon.ico")
         except Exception as e:
             if str(e) == "404 Not Found (error code: 10008): Unknown Message":
                 newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.ml/stacker)", color=0x3498DB)
@@ -86,7 +86,7 @@ async def update_leaderboard(score: int, username: str, message_id: int):
                 newEmbed.add_field(name="**Score**", value=score, inline=True)
                 newEmbed.set_footer(text="Last Updated")
                 newEmbed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
-                await webhook.send(embed=newEmbed)
+                await webhook.send(embed=newEmbed, username="Stacker", avatar_url="https://adith.ml/favicon.ico")
             else:
                 print(e)
 
@@ -111,9 +111,9 @@ def stacker():
     username = request.json["username"]
     score = request.json["score"]
     if username is not None and score is not None:
-        if score == 0 or score > 50:
+        if score == 0 or score > 99:
             return jsonify(message="200: Success")
-        asyncio.run(update_leaderboard(score, username, 1093228082359447592))
+        asyncio.run(update_leaderboard(score, username, os.environ["LEADERBOARD_MESSAGE_ID"]))
         adblock = str(request.json["adblock"])
         width = request.json["width"]
         height = request.json["height"]

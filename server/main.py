@@ -113,7 +113,7 @@ def stacker():
     if username is not None and score is not None:
         if score == 0 or score > 99:
             return jsonify(message="200: Success")
-        asyncio.run(update_leaderboard(score, username, 1093231317539373078))
+        asyncio.run(update_leaderboard(score, username, 1093232528959213608))
         adblock = str(request.json["adblock"])
         width = request.json["width"]
         height = request.json["height"]

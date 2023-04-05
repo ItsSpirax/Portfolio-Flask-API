@@ -67,8 +67,6 @@ def ping():
 def stacker():
     username = request.json["username"]
     score = request.json["score"]
-    if username == "Adith":
-        score += 10
     if username is not None and score is not None:
         if score == 0 or score > 50:
             return jsonify(message="200: Success")

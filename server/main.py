@@ -113,7 +113,7 @@ def stacker():
         if score == 0 or score > 99 or len(username) > 12 or len(username) < 3:
             return jsonify(message="200: Success")
         bw_flag = False
-        with open("badwords.txt", "r") as f:
+        with open("list/badwords.txt", "r") as f:
             badwords = f.read().splitlines()
         for word in badwords:
             if word in username.lower():

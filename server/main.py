@@ -110,9 +110,17 @@ def stacker():
     username = request.json["username"].strip()
     score = request.json["score"]
     if username is not None and score is not None:
-        if score == 0 or score > 99:
+        if score == 0 or score > 99 or len(username) > 12 or len(username) < 3:
             return jsonify(message="200: Success")
-        asyncio.run(update_leaderboard(score, username, 1093232528959213608))
+        bw_flag = False
+        with open("badwords.txt", "r") as f:
+            badwords = f.read().splitlines()
+        for word in badwords:
+            if word in username.lower():
+                bw_flag = True
+                break
+        if bw_flag is False:
+            asyncio.run(update_leaderboard(score, username, 1093232528959213608))
         adblock = str(request.json["adblock"])
         width = request.json["width"]
         height = request.json["height"]

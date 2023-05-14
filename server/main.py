@@ -197,7 +197,7 @@ def stacker():
 @app.route("/v1/SubmitForm", methods=["POST"])
 def submitform():
     if captcha_verify(
-            request.json["g-recaptcha-response"], request.headers.get("X-Forwarded-For")
+            request.json["g-recaptcha-response"], request.headers.get("Cf-Connecting-Ip")
     ):
         email = request.json["email"]
         comment = "```" + str(request.json["comment"]) + "```"

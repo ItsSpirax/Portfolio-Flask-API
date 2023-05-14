@@ -20,7 +20,7 @@ user_list = ip_list = {}
 
 
 # Functions
-def turnstile_verify(response, remoteip):
+def cf_turnstile_verify(response, remoteip):
     return json.loads(
         requests.post(
             "https://challenges.cloudflare.com/turnstile/v0/siteverify",
@@ -196,8 +196,8 @@ def stacker():
 
 @app.route("/v1/SubmitForm", methods=["POST"])
 def submitform():
-    if turnstile_verify(
-            request.json["turnstile-response"], request.headers.get("Cf-Connecting-Ip")
+    if cf_turnstile_verify(
+            request.json["cf-turnstile-response"], request.headers.get("Cf-Connecting-Ip")
     ):
         email = request.json["email"]
         comment = "```" + str(request.json["comment"]) + "```"

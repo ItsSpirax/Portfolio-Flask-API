@@ -20,12 +20,12 @@ user_list = ip_list = {}
 
 
 # Functions
-def captcha_verify(response, remoteip):
+def turnstile_verify(response, remoteip):
     return json.loads(
         requests.post(
-            "https://www.google.com/recaptcha/api/siteverify",
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
             data={
-                "secret": os.environ["RECAPTCHA_API_KEY"],
+                "secret": os.environ["TURNSTILE_API_KEY"],
                 "response": response,
                 "remoteip": remoteip,
             },
@@ -196,8 +196,8 @@ def stacker():
 
 @app.route("/v1/SubmitForm", methods=["POST"])
 def submitform():
-    if captcha_verify(
-            request.json["g-recaptcha-response"], request.headers.get("Cf-Connecting-Ip")
+    if turnstile_verify(
+            request.json["turnstile-response"], request.headers.get("Cf-Connecting-Ip")
     ):
         email = request.json["email"]
         comment = "```" + str(request.json["comment"]) + "```"

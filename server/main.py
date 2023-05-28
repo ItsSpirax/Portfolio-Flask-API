@@ -216,34 +216,8 @@ def submitform():
 # Error Handlers
 @app.errorhandler(400)
 def bad_request():
-    return jsonify(error="400: Bad Request"), 400
-
-
-@app.errorhandler(401)
-def unauthorized():
-    return jsonify(error="401: Unauthorized"), 401
-
+    return redirect("https://adith.ml/400", code=301)
 
 @app.errorhandler(403)
 def forbidden():
-    return jsonify(error="403: Forbidden"), 403
-
-
-@app.errorhandler(404)
-def page_not_found():
-    return jsonify(error="404: Not Found"), 404
-
-
-@app.errorhandler(405)
-def method_not_allowed():
-    return jsonify(error="405: Method Not Allowed"), 405
-
-
-@app.errorhandler(500)
-def server_error():
-    return jsonify(error="500: Server Error"), 500
-
-
-@app.errorhandler(505)
-def not_supported():
-    return jsonify(error="505: HTTP Not Supported"), 505
+    return redirect("https://adith.ml/403", code=301)

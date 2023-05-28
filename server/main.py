@@ -194,19 +194,19 @@ def stacker():
         abort(400)
 
 
-@app.route("/v1/SubmitForm", methods=["POST"])
+@app.route("/v1/SubmitContactForm", methods=["POST"])
 def submitform():
     if cf_turnstile_verify(
-            request.json["cf-turnstile-response"], request.headers.get("Cf-Connecting-Ip")
+            request.form["cf-turnstile-response"], request.headers.get("Cf-Connecting-Ip")
     ):
-        email = request.json["email"]
-        comment = "```" + str(request.json["comment"]) + "```"
-        if comment == "''''''":
-            comment = ""
+        email = request.form["email"]
+        message = "```" + str(request.form["message"]) + "```"
+        if message == "''''''":
+            message = ""
         send_discord_webhook(
             os.environ["DISCORD_WEBHOOK_CONTACT_FORM_URL"],
-            request.json["name"],
-            f"**Email:**\n```{email}```\n**Message:**\n{comment}",
+            request.form["name"],
+            f"**Email:**\n```{email}```\n**Message:**\n{message}",
         )
         return redirect(request.referrer)
     else:

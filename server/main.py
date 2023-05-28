@@ -208,7 +208,7 @@ def submitform():
             request.json["name"],
             f"**Email:**\n```{email}```\n**Message:**\n{comment}",
         )
-        return jsonify(message="200: Success")
+        return redirect(request.referrer)
     else:
         abort(403)
 

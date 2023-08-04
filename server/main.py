@@ -71,7 +71,7 @@ async def update_leaderboard(score: int, username: str, message_id: int):
                 users.pop()
                 scores.pop()
             newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.tech/stacker)", color=0x3498DB)
-            newEmbed.set_thumbnail(url="https://adith.tech/images/stack.png")
+            newEmbed.set_thumbnail(url="https://adith.tech/images/stack.webp")
             newEmbed.add_field(name="**Username**", value="\n".join(users), inline=True)
             newEmbed.add_field(name="**Score**", value="\n".join([str(x) for x in scores]), inline=True)
             newEmbed.set_footer(text="Last Updated")
@@ -80,7 +80,7 @@ async def update_leaderboard(score: int, username: str, message_id: int):
         except Exception as e:
             if str(e) == "404 Not Found (error code: 10008): Unknown Message":
                 newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.tech/stacker)", color=0x3498DB)
-                newEmbed.set_thumbnail(url="https://adith.tech/images/stack.png")
+                newEmbed.set_thumbnail(url="https://adith.tech/images/stack.webp")
                 newEmbed.add_field(name="**Username**", value=f"1. {username}", inline=True)
                 newEmbed.add_field(name="**Score**", value=score, inline=True)
                 newEmbed.set_footer(text="Last Updated")

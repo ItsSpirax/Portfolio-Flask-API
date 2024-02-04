@@ -214,9 +214,14 @@ def submitform():
 
 @app.route("/v1/results", methods=["GET"])
 def mumresults():
-    if request.args.get("id") in requests.get("http://www.mumresults.in/").text:
-        return jsonify(results=True)
-    return jsonify(results=False)
+    # Check if id is present twice in the response
+    rq = 
+    # Check if id is present twice in the response
+    if rq != 2:
+        return jsonify(message="400: Bad Request")
+    
+    
+    return requests.get("http://www.mumresults.in/").text.count(request.args.get("id"))
 
 # Error Handlers
 @app.errorhandler(400)

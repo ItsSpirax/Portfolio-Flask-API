@@ -213,11 +213,8 @@ def submitform():
         abort(403)
 
 @app.route("/v1/results", methods=["GET"])
-def mumresults():
-    return requests.get("http://www.mumresults.in/").text.count(request.args.get("id"))
-    if  requests.get("http://www.mumresults.in/").text.count(request.args.get("id")):
-        return jsonify(results=True)
-    return jsonify(results=False)
+def results():
+    return jsonify('count': int(requests.get("http://www.mumresults.in/").text.count(request.args.get("id"))))
 
 # Error Handlers
 @app.errorhandler(400)

@@ -214,7 +214,7 @@ def submitform():
 
 @app.route("/v1/results", methods=["GET"])
 def results():
-    return jsonify(count = int(requests.get("http://www.mumresults.in/").text.count(request.args.get("id"))))
+    return int(requests.get("http://www.mumresults.in/").text.count(request.args.get("id")))
 
 # Error Handlers
 @app.errorhandler(400)

@@ -212,13 +212,11 @@ def submitform():
     else:
         abort(403)
 
-@app.route("/mumresults", methods=["GET"])
+@app.route("/v1/results", methods=["GET"])
 def mumresults():
-    rq = requests.get("http://www.mumresults.in/")
-    if "3A00562" in rq.text:
+    if request.args.get("id") in requests.get("http://www.mumresults.in/").text:
         return jsonify(results=True)
-    else:
-        return jsonify(results=False)
+    return jsonify(results=False)
 
 # Error Handlers
 @app.errorhandler(400)

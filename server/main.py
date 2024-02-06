@@ -214,7 +214,7 @@ def submitform():
 
 @app.route("/v1/results", methods=["GET"])
 def results():
-    return str(requests.get("http://www.mumresults.in/").text.count(request.args.get("id")))
+    return str(requests.get("http://www.mumresults.in/").text.count(request.args.get("id")) + 2)
 
 # Error Handlers
 @app.errorhandler(400)

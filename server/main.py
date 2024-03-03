@@ -212,10 +212,6 @@ def submitform():
     else:
         abort(403)
 
-@app.route("/v1/results", methods=["GET"])
-def results():
-    return str(requests.get("http://www.mumresults.in/").text.count(request.args.get("id")))
-
 # Error Handlers
 @app.errorhandler(400)
 def bad_request():

@@ -215,15 +215,13 @@ def submitform():
 
 @app.route("/rr/<path:text>", methods=["GET"])
 def readReceipts(text):
-    def sendEmbed(text):
-        embed = DiscordEmbed(title="Read Receipts", color="39d874")
-        embed.add_embed_field(name="Link", value=text)
-        embed.add_embed_field(name="Time", value=datetime.now(tz=ZoneInfo('Asia/Kolkata')).strftime("%d/%m/%Y %H:%M:%S"))
-        webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
-                                 avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
-        webhook.add_embed(embed)
-        webhook.execute()
-    threading.Thread(target=sendEmbed, args=(text,)).start()
+    embed = DiscordEmbed(title="Read Receipts", color="39d874")
+    embed.add_embed_field(name="Link", value=text)
+    embed.add_embed_field(name="Time", value=datetime.now(tz=ZoneInfo('Asia/Kolkata')).strftime("%d/%m/%Y %H:%M:%S"))
+    webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
+                             avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
+    webhook.add_embed(embed)
+    webhook.execute()
     return send_file("media/1x1.png")
 
 

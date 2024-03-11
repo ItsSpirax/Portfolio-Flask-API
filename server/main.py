@@ -212,6 +212,18 @@ def submitform():
     else:
         abort(403)
 
+@app.route("/rr/<path:text>", methods=["GET"])
+def readReceipts(text):
+    embed = DiscordEmbed(title="Read Receipts", description=f"**Link:** {text}", color="39d874")
+    embed.set_footer(text="Time")
+    embed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
+    webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
+                             avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
+    webhook.execute()
+    return send_file("media/1x1.png")
+
+
+
 # Error Handlers
 @app.errorhandler(400)
 def bad_request():

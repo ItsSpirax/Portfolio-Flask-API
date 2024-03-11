@@ -215,10 +215,8 @@ def submitform():
 
 @app.route("/rr/<path:text>", methods=["GET"])
 def readReceipts(text):
-    embed = DiscordEmbed(title="Read Receipt", color="39d874")
-    embed.add_embed_field(name="Link", value=f"/{text}")
+    embed = DiscordEmbed(title=f"Read - {text}", color="39d874")
     embed.add_embed_field(name="Time", value=f"<t:{int(datetime.now().timestamp())}:T>")
-    
     webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
                              avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
     webhook.add_embed(embed)

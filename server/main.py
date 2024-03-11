@@ -10,6 +10,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from flask import Flask, request, redirect, abort, jsonify, send_file
 from flask_cors import CORS
+import threading
 
 # Init
 app = Flask(__name__)
@@ -214,12 +215,15 @@ def submitform():
 
 @app.route("/rr/<path:text>", methods=["GET"])
 def readReceipts(text):
-    embed = DiscordEmbed(title="Read Receipts", description=f"**Link:** {text}", color="39d874")
-    embed.set_footer(text="Time")
-    embed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
-    webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
-                             avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
-    webhook.execute()
+    def sendEmbed(text):
+        embed = DiscordEmbed(title="Read Receipts", color="39d874")
+        embed.add_embed_field(name="Link", value=text)
+        embed.add_embed_field(name="Time", value=datetime.now(tz=ZoneInfo('Asia/Kolkata')).strftime("%d/%m/%Y %H:%M:%S"))
+        webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
+                                 avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
+        webhook.add_embed(embed)
+        webhook.execute()
+    threading.Thread(target=sendEmbed, args=(text,)).start()
     return send_file("media/1x1.png")
 
 

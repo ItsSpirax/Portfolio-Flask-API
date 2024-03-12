@@ -17,7 +17,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Variables
-user_list = ip_list = {}
+user_list = ip_list = read_list = {}
 
 
 # Functions
@@ -215,8 +215,15 @@ def submitform():
 
 @app.route("/rr/<path:text>", methods=["GET"])
 def readReceipts(text):
-    embed = DiscordEmbed(title=f"Read - {text}", color="39d874")
-    embed.add_embed_field(name="Time", value=f"<t:{int(datetime.now().timestamp())}:T>")
+    ua = request.headers.get("User-Agent")
+    if ua.startswith("Mozilla/5.0 (compatible; Discordbot/") or ua.startswith("Twitterbot/"):
+        embed = DiscordEmbed(title=f"Read - {text}", color="39d874")
+        embed.add_embed_field(name="UA", value=str(ua))
+        embed.add_embed_field(name="Time", value=f"<t:{int(datetime.now().timestamp())}:T>")
+    else:
+        embed = DiscordEmbed(title=f"Non Discord Access - {text}", color="39d874")
+        embed.add_embed_field(name="UA", value=str(ua))
+        embed.add_embed_field(name="Time", value=f"<t:{int(datetime.now().timestamp())}:T>")
     webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_READ_RECEIPTS_URL"], username="Website - Adith",
                              avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
     webhook.add_embed(embed)

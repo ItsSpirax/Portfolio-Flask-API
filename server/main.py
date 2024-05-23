@@ -93,7 +93,7 @@ async def update_leaderboard(score: int, username: str, message_id: int):
 # Web Request Routes
 @app.route("/", methods=["GET"])
 def home():
-    return redirect("https://adith.tech", code=301)
+    return jsonify(message="200: Success")
 
 
 @app.route("/favicon.ico", methods=["GET"])

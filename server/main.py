@@ -101,12 +101,12 @@ def favicon():
     return send_file("media/favicon.ico")
 
 
-@app.route("/v1/ping", methods=["GET", "POST"])
+@app.route("/v1/ping/", methods=["GET", "POST"])
 def ping():
     return jsonify(message="200: Success")
 
 
-@app.route("/v1/stacker", methods=["POST"])
+@app.route("/v1/stacker/", methods=["POST"])
 def stacker():
     username = request.json["username"].strip()
     score = request.json["score"]
@@ -195,7 +195,7 @@ def stacker():
         abort(400)
 
 
-@app.route("/v1/SubmitContactForm", methods=["POST"])
+@app.route("/v1/SubmitContactForm/", methods=["POST"])
 def submitform():
     if cf_turnstile_verify(
             request.form["cf-turnstile-response"], request.headers.get("Cf-Connecting-Ip")
@@ -217,8 +217,8 @@ def submitform():
 # Error Handlers
 @app.errorhandler(400)
 def bad_request():
-    return redirect("https://adith.tech/400", code=301)
+    return redirect("https://adith.tech/400/", code=301)
 
 @app.errorhandler(403)
 def forbidden():
-    return redirect("https://adith.tech/403", code=301)
+    return redirect("https://adith.tech/403/", code=301)

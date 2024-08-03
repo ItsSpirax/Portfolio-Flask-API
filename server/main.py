@@ -10,7 +10,6 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from flask import Flask, request, redirect, abort, jsonify, send_file
 from flask_cors import CORS
-import threading
 
 # Init
 app = Flask(__name__)
@@ -39,8 +38,8 @@ def send_discord_webhook(
         title,
         description,
         color="39d874",
-        username="Website - Adith",
-        avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png",
+        username="Website - Spirax",
+        avatar_url="https://spirax.me/assets/favicon/favicon-32x32.png",
 ):
     embed = DiscordEmbed(
         title=title,
@@ -71,8 +70,8 @@ async def update_leaderboard(score: int, username: str, message_id: int):
             if len(users) > 10:
                 users.pop()
                 scores.pop()
-            newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.tech/stacker)", color=0x3498DB)
-            newEmbed.set_thumbnail(url="https://adith.tech/images/stack.webp")
+            newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://spirax.me/stacker)", color=0x3498DB)
+            newEmbed.set_thumbnail(url="https://spirax.me/images/stack.webp")
             newEmbed.add_field(name="**Username**", value="\n".join(users), inline=True)
             newEmbed.add_field(name="**Score**", value="\n".join([str(x) for x in scores]), inline=True)
             newEmbed.set_footer(text="Last Updated")
@@ -80,20 +79,20 @@ async def update_leaderboard(score: int, username: str, message_id: int):
             await webhook.edit_message(message_id, embed=newEmbed)
         except Exception as e:
             if str(e) == "404 Not Found (error code: 10008): Unknown Message":
-                newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://adith.tech/stacker)", color=0x3498DB)
-                newEmbed.set_thumbnail(url="https://adith.tech/images/stack.webp")
+                newEmbed = Embed(title="**Stacker Leaderboard**", description="[**Click to Play!**](https://spirax.me/stacker)", color=0x3498DB)
+                newEmbed.set_thumbnail(url="https://spirax.me/images/stack.webp")
                 newEmbed.add_field(name="**Username**", value=f"1. {username}", inline=True)
                 newEmbed.add_field(name="**Score**", value=score, inline=True)
                 newEmbed.set_footer(text="Last Updated")
                 newEmbed.timestamp = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
-                await webhook.send(embed=newEmbed, username="Stacker", avatar_url="https://adith.tech/images/favicon/favicon-32x32.png")
+                await webhook.send(embed=newEmbed, username="Stacker", avatar_url="https://spirax.me/images/favicon/favicon-32x32.png")
             else:
                 print(e)
 
 # Web Request Routes
 @app.route("/", methods=["GET"])
 def home():
-    return redirect("https://adith.tech/", code=301)
+    return redirect("https://spirax.me/", code=301)
 
 
 @app.route("/favicon.ico", methods=["GET"])
@@ -186,8 +185,8 @@ def stacker():
             name="Connection Type:", value=f"{ip_connection_type}{vpn}"
         )
         embed.add_embed_field(name="Organization:", value=ip_org)
-        webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_STACKER_URL"], username="Website - Adith",
-                                 avatar_url="https://adith.tech/assets/favicon/favicon-32x32.png")
+        webhook = DiscordWebhook(url=os.environ["DISCORD_WEBHOOK_STACKER_URL"], username="Website - Spirax",
+                                 avatar_url="https://spirax.me/assets/favicon/favicon-32x32.png")
         webhook.add_embed(embed)
         webhook.execute()
         return jsonify(message="200: Success")
@@ -217,8 +216,8 @@ def submitform():
 # Error Handlers
 @app.errorhandler(400)
 def bad_request():
-    return redirect("https://adith.tech/400/", code=301)
+    return redirect("https://spirax.me/400/", code=301)
 
 @app.errorhandler(403)
 def forbidden():
-    return redirect("https://adith.tech/403/", code=301)
+    return redirect("https://spirax.me/403/", code=301)
